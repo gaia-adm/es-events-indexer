@@ -26,10 +26,10 @@ test:
   override:
     - docker run -d -p 5673:5672 -p 15673:15672 -e RABBITMQ_PASS="mypass" --name rabbitmq tutum/rabbitmq
     - docker run -d -p 9200:9200 -p 9300:9300 --name es elasticsearch:2 -Des.network.host=0.0.0.0
-    - docker run -d -p 8080:8080 -p 8081:8081 --link rabbitmq:rabbitmq --link es:es --name indexer gaiaadm/event-indexer:$BUILD_TAG java -Ddw.rabbitmq.username=admin -Ddw.rabbitmq.password=mypass -jar /data/target/events-indexer-1.0-SNAPSHOT.jar server
+    - docker run -d -p 8080:8080 -p 8081:8081 --link rabbitmq:rabbitmq --link es:es --name indexer gaiaadm/event-indexer:$CIRCLE_BUILD_NUM java -Ddw.rabbitmq.username=admin -Ddw.rabbitmq.password=mypass -jar /data/target/events-indexer-1.0-SNAPSHOT.jar server
     - docker run -d -p 9000:8080 -p 9001:8081 --link rabbitmq:rabbitmq --name faker gaiaadm/data-faker java -Ddw.rabbitmq.username=admin -Ddw.rabbitmq.password=mypass -jar /data/target/data-faker-1.0-SNAPSHOT.jar server
     - sleep 5
-    - "curl --data '{\"index\":{\"_index\":\"testIndex\",\"_type\":\"testType\"}}\n{\"testField\":\"testValue\"' 'http://localhost:9000/fake-data?repeat=2&sendto=rabbitmq'"
+    - "curl --data '{\"index\":{\"_index\":\"testIndex\",\"_type\":\"testType\"}}\n{\"testField\":\"testValue\"' 'http://localhost:9000/fake-data?repeat=2&sendto=rabbitmq&queuename=es-events-indexer'"
     - sleep 5
     - "curl -G 'http://localhost:9200/testIndex/search' --data-urlencode 'q=testValue' | grep 'testField' | grep 'testValue'"
 deployment:
