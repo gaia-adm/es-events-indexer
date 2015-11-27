@@ -29,9 +29,9 @@ test:
     - docker run -d -p 8080:8080 -p 8081:8081 --link rabbitmq:rabbitmq --link es:es --name indexer gaiaadm/es-event-indexer:$CIRCLE_BUILD_NUM java -Ddw.rabbitmq.username=admin -Ddw.rabbitmq.password=mypass -jar /data/target/es-events-indexer-1.0-SNAPSHOT.jar server
     - docker run -d -p 9000:8080 -p 9001:8081 --link rabbitmq:rabbitmq --name faker gaiaadm/data-faker java -Ddw.rabbitmq.username=admin -Ddw.rabbitmq.password=mypass -jar /data/target/data-faker-1.0-SNAPSHOT.jar server
     - sleep 5
-    - "curl --data '{\"index\":{\"_index\":\"testIndex\",\"_type\":\"testType\"}}\n{\"testField\":\"testValue\"' 'http://localhost:9000/fake-data?repeat=2&sendto=rabbitmq&queuename=es-events-indexer'"
+    - "curl --data $'{\"index\":{\"_index\":\"testindex\",\"_type\":\"testtype\"}}\n{\"testfield\":\"testvalue\"' 'http://localhost:9000/fake-data?repeat=2&sendto=rabbitmq&queuename=es-events-indexer'"
     - sleep 5
-    - "curl -G 'http://localhost:9200/testIndex/_search' --data-urlencode 'q=testValue' | grep 'testField' | grep 'testValue'"
+    - "curl -G 'http://localhost:9200/testIndex/_search' --data-urlencode 'q=testvalue' | grep 'testfield' | grep 'testvalue'"
 deployment:
   hub:
     branch: master
