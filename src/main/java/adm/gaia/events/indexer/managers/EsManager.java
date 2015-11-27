@@ -33,7 +33,7 @@ public class EsManager implements Managed {
         StringBuilder baseBuilder = new StringBuilder();
 
         esBaseUrl = baseBuilder.append(conf.getProtocol()).append("://").append(conf.getHost()).append(":").
-                append(conf.getPort()).append("/bulk").toString();
+                append(conf.getPort()).append("/_bulk").toString();
     }
 
 
