@@ -35,7 +35,7 @@ public class EventIndexerConsumer extends DefaultConsumer {
             String s = new String(body, "UTF-8");
             byte [] subArray = Arrays.copyOfRange(body, 0, 30);
             System.out.println(" [*] Channel " + getChannel().toString() +
-                    Thread.currentThread().toString() + ", Received: " + body.length + " bytes, payload starts with: " + new String(subArray, "UTF-8")+"...");
+                    Thread.currentThread().toString() + ", Received: " + body.length + " bytes, payload starts with: " + new String(body, "UTF-8")+"...");
 
             HttpPost httpPost = new HttpPost(esManager.getEsBaseUrl());
 
