@@ -1,0 +1,43 @@
+machine:
+  services:
+    - docker
+dependencies:
+  #cache_directories:
+  #  - "~/docker"
+
+  override:
+    - cp Dockerfile Dockerfile.run
+    - cp Dockerfile.build Dockerfile
+
+    #- if [[ -e ~/docker/build-img.tar ]]; then docker load -i ~/docker/build-img.tar; fi
+    - docker build -t build-img .
+    #- mkdir -p ~/docker; docker save build-img > ~/docker/build-img.tar
+
+    - docker create --name build-cont build-img
+    - mkdir -p ./target
+    - docker cp build-cont:/usr/local/gaia/target/es-events-indexer-1.0-SNAPSHOT.jar ./target/es-events-indexer-1.0-SNAPSHOT.jar
+    - cp Dockerfile.run Dockerfile
+
+    #- if [[ -e ~/docker/es-event-indexer.tar ]]; then docker load -i ~/docker/es-event-indexer.tar; fi
+    - docker build -t gaiaadm/es-event-indexer .
+    - docker tag gaiaadm/es-event-indexer gaiaadm/es-event-indexer:$CIRCLE_BUILD_NUM
+    #- mkdir -p ~/docker; docker save gaiaadm/es-event-indexer > ~/docker/es-event-indexer.tar
+test:
+  override:
+    - docker run -d -p 5673:5672 -p 15673:15672 -e RABBITMQ_PASS="mypass" --name rabbitmq tutum/rabbitmq
+    - docker run -d -p 9200:9200 -p 9300:9300 --name es elasticsearch:2 -Des.network.host=0.0.0.0
+    - docker run -d -p 8080:8080 -p 8081:8081 --link rabbitmq:rabbitmq --link es:es --name indexer gaiaadm/event-indexer:$BUILD_TAG java -Ddw.rabbitmq.username=admin -Ddw.rabbitmq.password=mypass -jar /data/target/events-indexer-1.0-SNAPSHOT.jar server
+    - docker run -d -p 9000:8080 -p 9001:8081 --link rabbitmq:rabbitmq --name faker gaiaadm/data-faker java -Ddw.rabbitmq.username=admin -Ddw.rabbitmq.password=mypass -jar /data/target/data-faker-1.0-SNAPSHOT.jar server
+    - sleep 5
+    - "curl --data '{\"index\":{\"_index\":\"testIndex\",\"_type\":\"testType\"}}\n{\"testField\":\"testValue\"' 'http://localhost:9000/fake-data?repeat=2&sendto=rabbitmq'"
+    - sleep 5
+    - "curl -G 'http://localhost:9200/testIndex/search' --data-urlencode 'q=testValue' | grep 'testField' | grep 'testValue'"
+deployment:
+  hub:
+    branch: master
+    commands:
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+      - docker push gaiaadm/es-event-indexer
+general:
+  artifacts:
+    - target/es-event-indexer.jar
