@@ -32,10 +32,8 @@ public class EventIndexerConsumer extends DefaultConsumer {
                                AMQP.BasicProperties props, byte[] body)
     {
         try {
-            String s = new String(body, "UTF-8");
-            byte [] subArray = Arrays.copyOfRange(body, 0, 30);
-            System.out.println(" [*] Channel " + getChannel().toString() +
-                    Thread.currentThread().toString() + ", Received: " + body.length + " bytes, payload starts with: " + new String(body, "UTF-8")+"...");
+            /*System.out.println(" [*] Channel " + getChannel().toString() +
+                    Thread.currentThread().toString() + ", Received: " + body.length + " bytes, payload starts with: " + new String(body, "UTF-8")+"...");*/
 
             HttpPost httpPost = new HttpPost(esManager.getEsBaseUrl());
 
@@ -59,10 +57,12 @@ public class EventIndexerConsumer extends DefaultConsumer {
 
 
         } catch (Exception e) {
+            System.err.println("Exception occurred while trying to send event to ElasticSearch.");
             e.printStackTrace();
             try {
                 getChannel().basicNack(envelope.getDeliveryTag(), false, false);
             } catch (Exception e1) {
+                System.err.println("Exception occurred while trying to send Nack to RabbitMQ due to any Exception");
                 e1.printStackTrace();
             }
         }
