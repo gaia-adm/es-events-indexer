@@ -45,7 +45,7 @@ deployment:
       - docker push gaiaadm/es-event-indexer
 notify:
   webhooks:
-    - url: http://boris.gaiahub.io:88/wh/f72a2648-8dca-4bca-b92d-1a75a21e8f66/00f317ea3de099687860843ec7f2266bcc81dad0
+    - url: http://beta.gaiahub.io:88/wh/5a866f9b-98c9-438d-a8d4-53cf4ae9599c/4c310c8e220ee9bead74eece42ce0e109fd3535e
 general:
   artifacts:
     - target/es-event-indexer.jar
