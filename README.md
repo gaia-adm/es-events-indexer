@@ -1,4 +1,6 @@
-CircleCI build status: [![Circle CI](https://circleci.com/gh/gaia-adm/es-events-indexer.svg?style=svg)](https://circleci.com/gh/gaia-adm/es-events-indexer)
+[![](https://badge.imagelayers.io/gaiaadm/es-event-indexer:latest.svg)](https://imagelayers.io/?images=gaiaadm/es-event-indexer:latest 'Get your own badge on imagelayers.io')
+
+*CircleCI:* [![Circle CI](https://circleci.com/gh/gaia-adm/es-events-indexer.svg?style=svg)](https://circleci.com/gh/gaia-adm/es-events-indexer)
 
 Preface
 =======
