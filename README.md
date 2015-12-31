@@ -1,6 +1,4 @@
-[![](https://badge.imagelayers.io/gaiaadm/es-event-indexer:latest.svg)](https://imagelayers.io/?images=gaiaadm/es-event-indexer:latest 'Get your own badge on imagelayers.io')
-
-*CircleCI:* [![Circle CI](https://circleci.com/gh/gaia-adm/es-events-indexer.svg?style=svg)](https://circleci.com/gh/gaia-adm/es-events-indexer)
+[![Circle CI](https://circleci.com/gh/gaia-adm/es-events-indexer.svg?style=svg)](https://circleci.com/gh/gaia-adm/es-events-indexer) [![Codacy Badge](https://api.codacy.com/project/badge/grade/ce3927e9fbe74372b3778d4debc663ad)](https://www.codacy.com/app/alexei-led/es-events-indexer) [![](https://badge.imagelayers.io/gaiaadm/es-event-indexer:latest.svg)](https://imagelayers.io/?images=gaiaadm/es-event-indexer:latest 'Get your own badge on imagelayers.io')
 
 Preface
 =======
