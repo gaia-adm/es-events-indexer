@@ -51,7 +51,9 @@ public class RabbitmqManager implements Managed {
         connection = factory.newConnection();
 
         Channel defineChannel = connection.createChannel();
+        defineChannel.exchangeDeclare(rabbitmqConf.getExchangeName(), "topic", true);
         defineChannel.queueDeclare(rabbitmqConf.getQueueName(), true, false, false, null);
+        defineChannel.queueBind(rabbitmqConf.getQueueName(), rabbitmqConf.getExchangeName(), rabbitmqConf.getRoutingKey());
     }
 
     @Override

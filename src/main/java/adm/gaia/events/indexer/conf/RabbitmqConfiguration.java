@@ -13,18 +13,23 @@ import javax.validation.constraints.Min;
 public class RabbitmqConfiguration {
 
     /**
-     * The server-side consumer's queue that provides point-to-point semantics for stock requests.
+     * The queue name dedicated for es-events-indexer
      */
     @JsonProperty
     private String queueName = "es-events-indexer";
 
     /**
-     * Key that clients will use to send to send events
-     * Should be the same name as the queue since we use default RabbitMQ binding and expect the producers to
-     * use the default exchange ("") that by default bind the routingKey to the queue with the same name
+     * Need to be the same name as the producers are using
      */
     @JsonProperty
-    private String routingKey = queueName;
+    private String exchangeName = "events-to-index";
+
+    /**
+     * We use topic exchange, hence we can bind according to dynamic definition like "#.xxx"
+     * # - means zero or more words that can come before.
+     */
+    @JsonProperty
+    private String routingKey = "#.event";
 
     @JsonProperty
     private String host = "rabbitmq";//"192.168.59.103";
@@ -63,5 +68,9 @@ public class RabbitmqConfiguration {
 
     public String getRoutingKey() {
         return routingKey;
+    }
+
+    public String getExchangeName() {
+        return exchangeName;
     }
 }
