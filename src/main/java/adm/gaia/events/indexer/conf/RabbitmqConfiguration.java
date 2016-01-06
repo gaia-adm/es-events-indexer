@@ -25,11 +25,12 @@ public class RabbitmqConfiguration {
     private String exchangeName = "events-to-index";
 
     /**
-     * We use topic exchange, hence we can bind according to dynamic definition like "#.xxx"
-     * # - means zero or more words that can come before.
+     * We use topic exchange, hence we can bind according to dynamic definition like "xxx.#"
+     * # - means zero or more words that can come after.
+     *
      */
     @JsonProperty
-    private String routingKey = "#.event";
+    private String routingKey = "event.#";
 
     @JsonProperty
     private String host = "rabbitmq";//"192.168.59.103";
