@@ -50,10 +50,26 @@ public class RabbitmqManager implements Managed {
 
         connection = factory.newConnection();
 
+        //This Channel is only for declarations, for messages consumption we use different channels
         Channel defineChannel = connection.createChannel();
+
+        //Vars for dead letter declaration
+        String deadletterExchangeName = rabbitmqConf.getExchangeName()  + ".deadletter";
+        String deadletterQueueName = rabbitmqConf.getQueueName()  + ".deadletter";
+
+        //Declare Exchanges
         defineChannel.exchangeDeclare(rabbitmqConf.getExchangeName(), "topic", true);
-        defineChannel.queueDeclare(rabbitmqConf.getQueueName(), true, false, false, null);
+        defineChannel.exchangeDeclare(deadletterExchangeName, "topic", true);
+
+        //Declare the queue
+        Map<String, Object> args = new HashMap<String, Object>();
+        args.put("x-dead-letter-exchange", deadletterExchangeName);
+        defineChannel.queueDeclare(rabbitmqConf.getQueueName(), true, false, false, args);
         defineChannel.queueBind(rabbitmqConf.getQueueName(), rabbitmqConf.getExchangeName(), rabbitmqConf.getRoutingKey());
+
+        //Declare the dead letter queue
+        defineChannel.queueDeclare(deadletterQueueName, true, false, false, null);
+        defineChannel.queueBind(deadletterQueueName, deadletterExchangeName, rabbitmqConf.getRoutingKey());
     }
 
     @Override

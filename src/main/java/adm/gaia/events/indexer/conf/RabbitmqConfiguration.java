@@ -16,7 +16,7 @@ public class RabbitmqConfiguration {
      * The queue name dedicated for es-events-indexer
      */
     @JsonProperty
-    private String queueName = "es-events-indexer";
+    private String queueName = "es-events-indexer-q";
 
     /**
      * Need to be the same name as the producers are using
