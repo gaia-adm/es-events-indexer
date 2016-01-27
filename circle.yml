@@ -20,7 +20,8 @@ dependencies:
     - docker cp build-cont:/usr/local/gaia/target/es-events-indexer-1.0-SNAPSHOT.jar ./target/es-events-indexer-1.0-SNAPSHOT.jar
     - cp Dockerfile.run Dockerfile
     - docker build -t gaiaadm/es-event-indexer .
-    - docker tag gaiaadm/es-event-indexer gaiaadm/es-event-indexer:$CIRCLE_BUILD_NUM
+    - docker tag gaiaadm/es-event-indexer gaiaadm/es-event-indexer:$CIRCLE_BUILD_NUM-$CIRCLE_BRANCH
+    - docker tag gaiaadm/es-event-indexer gaiaadm/es-event-indexer:$CIRCLE_BRANCH
 test:
   override:
     - docker run -d -p 5673:5672 -p 15673:15672 -e RABBITMQ_PASS="mypass" --name rabbitmq tutum/rabbitmq
