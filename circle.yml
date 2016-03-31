@@ -34,7 +34,7 @@ test:
     - "curl -G 'http://localhost:9200/_search' --data-urlencode 'q=testvalue' | grep 'testfield' | grep 'testvalue'"
 deployment:
   continuous:
-    branch: [master, develop, /feature_.*/]
+    branch: [master, develop, /.*feature_.*/]
     commands:
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
       - docker push gaiaadm/es-event-indexer
